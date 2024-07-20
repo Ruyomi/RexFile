@@ -3,6 +3,8 @@ plugins {
     alias(libs.plugins.jetbrainsKotlinAndroid)
 }
 
+group = "com.ruyomi.utils"
+
 android {
     namespace = "com.ruyomi.utils.rexfile"
     compileSdk = 34
