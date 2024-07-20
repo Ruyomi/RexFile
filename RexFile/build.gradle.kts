@@ -7,24 +7,19 @@ plugins {
 group = "com.github.ruyomi"
 version = "1.0.0"
 
+publishing {
+    publications {
+        register<MavenPublication>("release") {
+            groupId = (group.toString())
+            artifactId = "rex-file"
+            version = version
+        }
+    }
+}
+
 android {
     namespace = "com.ruyomi.utils.rexfile"
     compileSdk = 34
-
-    afterEvaluate {
-        publishing {
-            publications {
-                register<MavenPublication>("release") {
-                    groupId = (group.toString())
-                    artifactId = "rex-file"
-                    version = version
-                    artifact("build/outputs/aar/rex-file-release.aar")
-
-                    afterEvaluate { artifact(tasks.getByName("bundleReleaseAar")) }
-                }
-            }
-        }
-    }
 
     defaultConfig {
         minSdk = 24
