@@ -4,7 +4,7 @@ plugins {
     `maven-publish`
 }
 
-group = "com.ruyomi.utils"
+group = "com.github.ruyomi.utils"
 version = "1.0.0"
 
 publishing {
@@ -17,8 +17,6 @@ publishing {
             groupId = (group.toString())
             artifactId = "rex-file"
             version = version
-
-            afterEvaluate { artifact(tasks.getByName("bundleReleaseAar")) }
         }
     }
 }
