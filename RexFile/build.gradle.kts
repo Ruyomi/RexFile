@@ -1,6 +1,23 @@
 plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+    alias(libs.plugins.mavenPublish)
+}
+
+group = "com.github.ruyomi"
+version = "1.0.0"
+
+publishing {
+    publications {
+        register<MavenPublication>("release") {
+            groupId = (group.toString())
+            artifactId = "rex-file"
+            version = version
+            artifact("build/outputs/aar/aar-test-release.aar")
+
+            afterEvaluate { artifact(tasks.getByName("bundleReleaseAar")) }
+        }
+    }
 }
 
 android {

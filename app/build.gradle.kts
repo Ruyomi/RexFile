@@ -1,20 +1,6 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
-    alias(libs.plugins.mavenPublish)
-}
-
-group = "com.github.ruyomi"
-version = "1.0.0"
-
-publishing {
-    publications {
-        register<MavenPublication>("release") {
-            groupId = (group.toString())
-            artifactId = "rex-file"
-            version = version
-        }
-    }
 }
 
 android {
