@@ -8,13 +8,17 @@ group = "com.ruyomi.utils"
 version = "1.0.0"
 
 publishing {
+    repositories {
+        mavenLocal()
+    }
+
     publications {
         register<MavenPublication>("release") {
             groupId = (group.toString())
             artifactId = "rex-file"
             version = version
 
-            afterEvaluate { }
+            afterEvaluate { artifact(tasks.getByName("bundleReleaseAar")) }
         }
     }
 }
