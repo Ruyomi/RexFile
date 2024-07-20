@@ -4,8 +4,8 @@ plugins {
     alias(libs.plugins.mavenPublish)
 }
 
-group = "com.github.ruyomi"
-version = "1.0.0"
+group = "com.github.ruyomi.utils"
+version = "0.1.8"
 
 publishing {
     publications {
