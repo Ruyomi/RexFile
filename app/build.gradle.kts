@@ -1,6 +1,22 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+    alias(libs.plugins.mavenPublish)
+}
+
+group = "com.ruyomi.utils.rexfile"
+version = "1.0.0"
+
+afterEvaluate {
+    publishing {
+        publications {
+            create<MavenPublication>("release") {
+                groupId = (group.toString())
+                artifactId = "rex-file"
+                version = version
+            }
+        }
+    }
 }
 
 android {
