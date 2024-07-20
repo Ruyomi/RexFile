@@ -1,10 +1,10 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
-    `maven-publish`
+    alias(libs.plugins.mavenPublish)
 }
 
-group = "com.github.ruyomi.utils"
+group = "com.github.ruyomi"
 version = "1.0.0"
 
 publishing {
