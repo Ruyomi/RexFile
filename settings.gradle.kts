@@ -22,3 +22,4 @@ dependencyResolutionManagement {
 rootProject.name = "RexFileDemo"
 include(":app")
 include(":RexFile")
+project(":RexFile").name = "rex-file"

@@ -7,14 +7,14 @@ plugins {
 group = "com.ruyomi.utils"
 version = "1.0.0"
 
-afterEvaluate {
-    publishing {
-        publications {
-            create<MavenPublication>("release") {
-                groupId = (group.toString())
-                artifactId = "rex-file"
-                version = version
-            }
+publishing {
+    publications {
+        register<MavenPublication>("release") {
+            groupId = (group.toString())
+            artifactId = "rex-file"
+            version = version
+
+            afterEvaluate { }
         }
     }
 }
@@ -67,7 +67,7 @@ android {
 
 dependencies {
 
-    implementation(project(":RexFile"))
+    implementation(project(":rex-file"))
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
