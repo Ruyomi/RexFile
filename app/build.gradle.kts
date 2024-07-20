@@ -4,7 +4,7 @@ plugins {
     alias(libs.plugins.mavenPublish)
 }
 
-group = "com.ruyomi.utils.rexfile"
+group = "com.ruyomi.utils"
 version = "1.0.0"
 
 afterEvaluate {
