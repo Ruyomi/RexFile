@@ -89,9 +89,7 @@ fun RexFile.copy(target: RexFile, cover: Boolean = false): Boolean {
                 flush()
                 close()
             }
-            outStream?.close()
             inputStream.close()
-            inStream?.close()
         }
         true
     } catch (_: Exception) {
@@ -121,7 +119,6 @@ fun RexFile.toZip(
         toZip(this, outputStream, keepStructure, keepRoot, if (keepRoot) name else "")
 
         outputStream.close()
-        outStream?.close()
 
         true
     } catch (_: Exception) {
@@ -168,7 +165,6 @@ private fun toZip(
         outputStream.flush()
 
         inputStream.close()
-        inStream?.close()
 
         outputStream.closeEntry()
     }
@@ -220,7 +216,6 @@ fun RexFile.unZip(entry: String, target: RexFile, cover: Boolean, keepStructure:
                         flush()
                         close()
                     }
-                    outStream?.close()
                 }
 
                 result++
@@ -246,7 +241,6 @@ fun RexFile.unZip(entry: String, target: RexFile, cover: Boolean, keepStructure:
                     flush()
                     close()
                 }
-                outStream?.close()
 
                 result++
                 inputStream.closeEntry()
@@ -256,7 +250,6 @@ fun RexFile.unZip(entry: String, target: RexFile, cover: Boolean, keepStructure:
         }
 
         inputStream.close()
-        inStream?.close()
 
         result
     } catch (_: Exception) {
@@ -279,7 +272,6 @@ private fun unZip(file: RexFile, entry: String): Boolean {
         }
 
         inputStream.close()
-        inStream?.close()
 
         isDir > 1
     } catch (_: Exception) {
@@ -300,8 +292,7 @@ fun readStream(stream: InputStream, close: Boolean = true): ByteArray = try {
         flush()
         close()
     }
-    inputStream.close()
-    if (close) stream.close()
+    if (close) inputStream.close()
 
     outputStream.toByteArray()
 } catch (_: Exception) {
@@ -314,9 +305,8 @@ fun writeStream(stream: OutputStream, bytes: ByteArray, close: Boolean = true): 
     outputStream.apply {
         write(bytes)
         flush()
-        close()
+        if (close) close()
     }
-    if (close) stream.close()
 
     true
 } catch (_: Exception) {
