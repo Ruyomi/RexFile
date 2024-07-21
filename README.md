@@ -11,7 +11,9 @@ RexFile是一个十分强大的android-file库。
 
 ### 注意事项
 
-- 在Shizuku和Root操作模式下，调用newOutputStream方法后返回的OutputStream只能够close一次，不能多close，会导致错误。
+- 在使用`ShizukuFile`或`RootFile`
+  时，确保使用`openInputStream()`/`openOutputStream()`/`newInputStream()`/`newOutputStream()`
+  开启的流的`close()`方法仅被调用一次，否则可能会出现问题。
 - 针对于最新Android14版本的Android/data目录访问问题，你可以尝试使用`(String).useBug()`来对`path`进行处理。
    
 ## 引用
