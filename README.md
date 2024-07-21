@@ -46,6 +46,19 @@ Kotlin：
 implementation("androidx.documentfile:documentfile:1.0.1")
 ```
 
+**Shizuku版本不得超过`13.1.0`**
+
+```Gradle
+implementation 'dev.rikka.shizuku:api:13.1.0'
+implementation 'dev.rikka.shizuku:provider:13.1.0'
+```
+or
+Kotlin：
+```Kotlin
+implementation("dev.rikka.shizuku:api:13.1.0")
+implementation("dev.rikka.shizuku:provider:13.1.0")
+```
+
 ### AndroidManifest.xml声明
 
 ```html
