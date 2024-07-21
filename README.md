@@ -61,7 +61,16 @@ implementation("androidx.documentfile:documentfile:1.0.1")
 初始化：
 
 ```kotlin
-RexFileConfig.instance.init(this) // 第二个参数可以传入RexFileModel的FILE、DOCUMENT、SHIZUKU、ROOT四种操作模式
+class MainActivity : ComponentActivity() {
+  override fun onCreate(savedInstanceState: Bundle?) {
+    // fileModel参数可以传入RexFileModel的FILE、DOCUMENT、SHIZUKU、ROOT四种操作模式 默认是 FILE
+    RexFileConfig.instance.init(this)
+  }
+  override fun onDestroy() {
+    super.onDestroy()
+    RexFileConfig.instance.destroy()
+  }
+}
 ```
 
 注册权限回调：
