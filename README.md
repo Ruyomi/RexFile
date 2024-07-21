@@ -108,7 +108,7 @@ hasRootPermission() // 判断Root权限
 ```Kotlin
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-        file(path) // 使用方式于java.io.File差不多，但是封装了一些比较方便好用的方法
+        file(path) // 使用方式与java.io.File差不多，但是封装了一些比较方便好用的方法
     }
 }
 ```
