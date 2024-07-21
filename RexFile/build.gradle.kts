@@ -37,9 +37,11 @@ android {
 
 dependencies {
 
-    implementation(libs.dev.api)
-    implementation(libs.dev.provider)
-    implementation(libs.androidx.documentfile)
+    // Shizuku
+    api(libs.dev.api)
+    api(libs.dev.provider)
+    // DocumentFile
+    api(libs.androidx.documentfile)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
