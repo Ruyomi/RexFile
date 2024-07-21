@@ -1,7 +1,7 @@
 # RexFile
 
 ## 前言
-RexFile是一个十分强大的android-file库。
+RexFile是一个十分强大的android-file库。  
 是Ruyomi团队的第一个开源作品，希望各位能够多多提Issues。
 
 ### 特点
@@ -92,10 +92,10 @@ docPermission.requestDocPermission() // 发起DocumentFile访问权限申请
 
 初始化文件操作类：
 ```Kotlin
-file(path)
+file(path) // 使用方式于java.io.File差不多，但是封装了一些比较方便好用的方法
 ```
 
-详细内容文档还在狂肝ing...
+详细内容文档还在狂肝ing...  
 欢迎各位来给Star，感谢！
 
 ## 开源协议
