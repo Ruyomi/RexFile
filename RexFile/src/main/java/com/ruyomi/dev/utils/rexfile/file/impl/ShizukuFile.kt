@@ -1,18 +1,18 @@
-package com.ruyomi.utils.rexfile.file.impl
+package com.ruyomi.dev.utils.rexfile.file.impl
 
-import com.ruyomi.utils.rexfile.file.RexFile
-import com.ruyomi.utils.rexfile.shell.RootUtil
+import com.ruyomi.dev.utils.rexfile.file.RexFile
+import com.ruyomi.dev.utils.rexfile.shell.ShizukuUtil
 import java.io.File
 
-class RootFile : RexFile {
+class ShizukuFile : RexFile {
 
     constructor(path: String) : super(path)
     constructor(file: RexFile, child: String) : super(file, child)
 
-    private fun runCommand(command: String): Boolean = RootUtil.executeCommand(command).first == 0
+    private fun runCommand(command: String): Boolean = ShizukuUtil.executeCommand(command).first == 0
 
     private fun runCommandWithOutput(command: String): String? {
-        val (exitValue, output) = RootUtil.executeCommand(command)
+        val (exitValue, output) = ShizukuUtil.executeCommand(command)
         return if (exitValue == 0) output.trim() else null
     }
 
@@ -37,7 +37,7 @@ class RootFile : RexFile {
 
     override fun getParent(): String = runCommandWithOutput("dirname $path") ?: ""
 
-    override fun getParentFile(): RootFile = RootFile(getParent())
+    override fun getParentFile(): ShizukuFile = ShizukuFile(getParent())
 
     override fun isDirectory(): Boolean = runCommand("test -d $path")
 
@@ -46,30 +46,27 @@ class RootFile : RexFile {
     override fun lastModified(): Long =
         runCommandWithOutput("stat -c %Y $path")?.toLongOrNull() ?: 0L
 
-    override fun length(): Long =
-        runCommandWithOutput("stat -c %s $path")?.toLongOrNull() ?: 0L
+    override fun length(): Long = runCommandWithOutput("stat -c %s $path")?.toLongOrNull() ?: 0L
 
     override fun lengthAnd(): Long =
         runCommandWithOutput("du -sb $path | cut -f1")?.toLongOrNull() ?: 0L
 
-    override fun list(): Array<String> =
-        runCommandWithOutput("ls -1 $path")?.lines()?.map {
-            "$path${File.separator}$it"
-        }?.toTypedArray() ?: arrayOf()
+    override fun list(): Array<String> = runCommandWithOutput("ls -1 $path")?.lines()?.map {
+        "$path${File.separator}$it"
+    }?.toTypedArray() ?: arrayOf()
 
     override fun list(filter: (String) -> Boolean): Array<String> =
         runCommandWithOutput("ls -1 $path")?.lines()?.filter {
             filter("$path${File.separator}$it")
         }?.toTypedArray() ?: arrayOf()
 
-    override fun listFiles(): Array<RexFile> =
-        runCommandWithOutput("ls -1 $path")?.lines()?.map {
-            RootFile("$path${File.separator}$it")
-        }?.toTypedArray() ?: arrayOf()
+    override fun listFiles(): Array<RexFile> = runCommandWithOutput("ls -1 $path")?.lines()?.map {
+        ShizukuFile("$path${File.separator}$it")
+    }?.toTypedArray() ?: arrayOf()
 
     override fun listFiles(filter: (RexFile) -> Boolean): Array<RexFile> =
         runCommandWithOutput("ls -1 $path")?.lines()?.map {
-            RootFile(it)
+            ShizukuFile("$path${File.separator}$it")
         }?.filter { filter(it) }?.toTypedArray() ?: arrayOf()
 
     override fun mkdirs(): Boolean = runCommand("mkdir -p $path")

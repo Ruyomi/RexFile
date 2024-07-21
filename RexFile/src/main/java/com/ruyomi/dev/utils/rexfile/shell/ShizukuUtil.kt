@@ -1,4 +1,4 @@
-package com.ruyomi.utils.rexfile.shell
+package com.ruyomi.dev.utils.rexfile.shell
 
 import android.content.pm.PackageManager
 import rikka.shizuku.Shizuku

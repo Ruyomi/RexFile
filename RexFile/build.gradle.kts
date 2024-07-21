@@ -1,24 +1,13 @@
+import com.vanniktech.maven.publish.SonatypeHost
+
 plugins {
     alias(libs.plugins.androidLibrary)
     alias(libs.plugins.jetbrainsKotlinAndroid)
     alias(libs.plugins.mavenPublish)
 }
 
-group = "com.github.ruyomi.utils"
-version = "0.1.8"
-
-publishing {
-    publications {
-        register<MavenPublication>("release") {
-            groupId = (group.toString())
-            artifactId = "rex-file"
-            version = version
-        }
-    }
-}
-
 android {
-    namespace = "com.ruyomi.utils.rexfile"
+    namespace = "com.ruyomi.dev.utils.rexfile"
     compileSdk = 34
 
     defaultConfig {
@@ -58,4 +47,57 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
+}
+
+
+mavenPublishing {
+    publishToMavenCentral(SonatypeHost.CENTRAL_PORTAL, automaticRelease = true)
+    signAllPublications()
+
+    allprojects.forEach { project ->
+        project.afterEvaluate {
+            project.extensions.findByType(PublishingExtension::class.java)?.apply {
+                project.extensions.findByType(SigningExtension::class.java)?.apply {
+                    useGpgCmd()
+                    publishing.publications.withType(MavenPublication::class.java)
+                        .forEach { publication ->
+                            sign(publication)
+                        }
+                }
+            }
+        }
+    }
+
+    coordinates(
+        groupId = "com.ruyomi.dev.utils",
+        artifactId = "rex-file",
+        version = libs.versions.rexFile.get()
+    )
+
+    pom {
+        name.set("rex-file-android")
+        description.set("A file operation library suitable for Android platform.")
+        url.set("https://github.com/Ruyomi/RexFile")
+
+        licenses {
+            license {
+                name.set("GNU LESSER GENERAL PUBLIC LICENSE, Version 2.1")
+                url.set("https://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt")
+            }
+        }
+
+        developers {
+            developer {
+                name.set("Ruyomi")
+                email.set("mingyubmy@qq.com")
+                url.set("https://github.com/Ruyomi")
+            }
+        }
+
+        scm {
+            url.set("https://github.com/Ruyomi/RexFile")
+            connection.set("scm:git@github.com/Ruyomi/RexFile.git")
+            developerConnection.set("scm:git@github.com/Ruyomi/RexFile.git")
+        }
+    }
 }

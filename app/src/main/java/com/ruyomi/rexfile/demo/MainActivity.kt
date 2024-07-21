@@ -6,26 +6,22 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Button
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import com.ruyomi.dev.utils.rexfile.file.RexFileConfig
+import com.ruyomi.dev.utils.rexfile.file.RexFileModel
+import com.ruyomi.dev.utils.rexfile.file.file
+import com.ruyomi.dev.utils.rexfile.file.hasDocPermission
+import com.ruyomi.dev.utils.rexfile.file.registerAllFilePermission
+import com.ruyomi.dev.utils.rexfile.file.registerDocPermission
+import com.ruyomi.dev.utils.rexfile.file.registerStoragePermission
+import com.ruyomi.dev.utils.rexfile.file.requestAllFilePermission
+import com.ruyomi.dev.utils.rexfile.file.requestDocPermission
+import com.ruyomi.dev.utils.rexfile.file.requestStoragePermission
 import com.ruyomi.rexfile.demo.ui.theme.RexFileDemoTheme
-import com.ruyomi.utils.rexfile.file.RexFileConfig
-import com.ruyomi.utils.rexfile.file.RexFileModel
-import com.ruyomi.utils.rexfile.file.file
-import com.ruyomi.utils.rexfile.file.hasDocPermission
-import com.ruyomi.utils.rexfile.file.registerAllFilePermission
-import com.ruyomi.utils.rexfile.file.registerDocPermission
-import com.ruyomi.utils.rexfile.file.registerStoragePermission
-import com.ruyomi.utils.rexfile.file.requestAllFilePermission
-import com.ruyomi.utils.rexfile.file.requestDocPermission
-import com.ruyomi.utils.rexfile.file.requestStoragePermission
 
 class MainActivity : ComponentActivity() {
 

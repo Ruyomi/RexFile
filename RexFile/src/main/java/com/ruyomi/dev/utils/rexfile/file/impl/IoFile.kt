@@ -1,6 +1,6 @@
-package com.ruyomi.utils.rexfile.file.impl
+package com.ruyomi.dev.utils.rexfile.file.impl
 
-import com.ruyomi.utils.rexfile.file.RexFile
+import com.ruyomi.dev.utils.rexfile.file.RexFile
 import java.io.File
 
 class IoFile : RexFile {

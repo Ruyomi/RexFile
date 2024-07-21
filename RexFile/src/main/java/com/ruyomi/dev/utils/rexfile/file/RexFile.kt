@@ -1,4 +1,4 @@
-package com.ruyomi.utils.rexfile.file
+package com.ruyomi.dev.utils.rexfile.file
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -14,12 +14,12 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.documentfile.provider.DocumentFile
-import com.ruyomi.utils.rexfile.file.impl.DocFile
-import com.ruyomi.utils.rexfile.file.impl.IoFile
-import com.ruyomi.utils.rexfile.file.impl.RootFile
-import com.ruyomi.utils.rexfile.file.impl.ShizukuFile
-import com.ruyomi.utils.rexfile.shell.RootUtil
-import com.ruyomi.utils.rexfile.shell.ShizukuUtil
+import com.ruyomi.dev.utils.rexfile.file.impl.DocFile
+import com.ruyomi.dev.utils.rexfile.file.impl.IoFile
+import com.ruyomi.dev.utils.rexfile.file.impl.RootFile
+import com.ruyomi.dev.utils.rexfile.file.impl.ShizukuFile
+import com.ruyomi.dev.utils.rexfile.shell.RootUtil
+import com.ruyomi.dev.utils.rexfile.shell.ShizukuUtil
 import java.io.BufferedInputStream
 import java.io.BufferedOutputStream
 import java.io.ByteArrayOutputStream
