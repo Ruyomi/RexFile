@@ -2,7 +2,7 @@
 
 ## 前言
 RexFile是一个十分强大的android-file库。  
-是Ruyomi团队的第一个开源作品，希望各位能够多多提Issues。
+同时这也是Ruyomi团队的第一个开源作品，希望各位能够多多提Issues。
 
 ### 特点
  - 强大的功能（支持File、DocumentFile、Shizuku、Root）
