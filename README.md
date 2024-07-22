@@ -47,6 +47,21 @@ implementation("com.ruyomi.dev.utils:rex-file:1.0.1")
 <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 ```
 
+若你需要用到Shizuku模式，请额外添加：
+```html
+<application
+  ... >
+  <!-- ... -->
+  <provider
+    android:name="rikka.shizuku.ShizukuProvider"
+    android:authorities="${applicationId}.shizuku"
+    android:enabled="true"
+    android:exported="true"
+    android:multiprocess="false"
+    android:permission="android.permission.INTERACT_ACROSS_USERS_FULL" />
+</application>
+```
+
 ## 使用方式
 
 初始化：
