@@ -14,6 +14,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.documentfile.provider.DocumentFile
+import androidx.fragment.app.Fragment
 import com.ruyomi.dev.utils.rexfile.file.impl.DocFile
 import com.ruyomi.dev.utils.rexfile.file.impl.IoFile
 import com.ruyomi.dev.utils.rexfile.file.impl.RootFile
@@ -52,7 +53,7 @@ fun file(file: RexFile, child: String) = when (RexFileConfig.instance.fileModel)
 fun RexFile.readString(): String = String(readBytes())
 fun RexFile.readBytes(): ByteArray = try {
     openInputStream()?.let { readStream(it) } ?: ByteArray(0)
-} catch (_: Exception) {
+} catch (e: Exception) {
     ByteArray(0)
 }
 
@@ -293,7 +294,7 @@ fun readStream(stream: InputStream, close: Boolean = true): ByteArray = try {
         close()
     }
     if (close) inputStream.close()
-
+    stream.close()
     outputStream.toByteArray()
 } catch (_: Exception) {
     ByteArray(0)
@@ -490,7 +491,7 @@ fun isBug() = File("${documentRootPath}Android\u200b/").list()?.contentEquals(Fi
 
 fun String.useBug() =
     if (isBug() && !contains("\u200b")) {
-        replace("Android", "Android\u200b")
+        replaceFirst("Android", "Android\u200b")
     } else this
 
 private val storagePermissions =
@@ -507,6 +508,15 @@ fun hasStoragePermission(): Boolean {
 }
 
 fun ComponentActivity.registerStoragePermission(
+    granted: (() -> Unit)? = null, denied: (() -> Unit)? = null
+) = registerForActivityResult(
+    ActivityResultContracts.RequestMultiplePermissions()
+) {
+    if (hasStoragePermission()) granted?.let { it1 -> it1() }
+    else denied?.let { it1 -> it1() }
+}
+
+fun Fragment.registerStoragePermission(
     granted: (() -> Unit)? = null, denied: (() -> Unit)? = null
 ) = registerForActivityResult(
     ActivityResultContracts.RequestMultiplePermissions()
@@ -567,6 +577,13 @@ fun ComponentActivity.registerAllFilePermission(
     else denied?.let { it1 -> it1() }
 }
 
+fun Fragment.registerAllFilePermission(
+    granted: (() -> Unit)? = null, denied: (() -> Unit)? = null
+) = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+    if (hasAllFilePermission()) granted?.let { it1 -> it1() }
+    else denied?.let { it1 -> it1() }
+}
+
 fun ActivityResultLauncher<Intent>.requestAllFilePermission() {
     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R)
         launch(Intent(Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION).apply {
@@ -591,6 +608,21 @@ fun ComponentActivity.registerDocPermission(
             granted?.let { it() }
         } else denied?.let { it() }
     }
+
+@SuppressLint("WrongConstant")
+fun Fragment.registerDocPermission(
+    granted: (() -> Unit)? = {}, denied: (() -> Unit)? = {}
+) = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+    if (result.resultCode == Activity.RESULT_OK && result.data != null) {
+        result.data!!.data?.let {
+            requireContext().contentResolver.takePersistableUriPermission(
+                it,
+                result.data!!.flags and (Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+            )
+        }
+        granted?.let { it() }
+    } else denied?.let { it() }
+}
 
 fun ActivityResultLauncher<Intent>.requestDocPermission(path: String, sub: Boolean = true) =
     launch(Intent(Intent.ACTION_OPEN_DOCUMENT_TREE).apply {

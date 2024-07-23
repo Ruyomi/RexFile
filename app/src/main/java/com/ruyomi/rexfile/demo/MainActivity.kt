@@ -15,12 +15,15 @@ import com.ruyomi.dev.utils.rexfile.file.RexFileConfig
 import com.ruyomi.dev.utils.rexfile.file.RexFileModel
 import com.ruyomi.dev.utils.rexfile.file.file
 import com.ruyomi.dev.utils.rexfile.file.hasDocPermission
+import com.ruyomi.dev.utils.rexfile.file.readString
 import com.ruyomi.dev.utils.rexfile.file.registerAllFilePermission
 import com.ruyomi.dev.utils.rexfile.file.registerDocPermission
 import com.ruyomi.dev.utils.rexfile.file.registerStoragePermission
 import com.ruyomi.dev.utils.rexfile.file.requestAllFilePermission
 import com.ruyomi.dev.utils.rexfile.file.requestDocPermission
 import com.ruyomi.dev.utils.rexfile.file.requestStoragePermission
+import com.ruyomi.dev.utils.rexfile.file.useBug
+import com.ruyomi.dev.utils.rexfile.file.write
 import com.ruyomi.rexfile.demo.ui.theme.RexFileDemoTheme
 
 class MainActivity : ComponentActivity() {
@@ -58,11 +61,12 @@ class MainActivity : ComponentActivity() {
         filePermission.requestStoragePermission()
         allFile.requestAllFilePermission()
 
-        if (!"/storage/emulated/0/Android\u200b/data/bin.mt.plus/".hasDocPermission()) {
-            docFile.requestDocPermission("/storage/emulated/0/Android\u200b/data/bin.mt.plus/")
+        if (!"/storage/emulated/0/Android/data/bin.mt.plus/".useBug().hasDocPermission()) {
+            docFile.requestDocPermission("/storage/emulated/0/Android/data/bin.mt.plus/".useBug())
         } else {
-            file("/storage/emulated/0/Android\u200b/data/bin.mt.plus/a/a/a/a").apply {
-                createNewFileAnd().toString().showToast(this@MainActivity)
+            file("/storage/emulated/0/Android/data/bin.mt.plus/a/a/a/a".useBug()).apply {
+                write("Hello").toString().showToast(this@MainActivity)
+                readString().showToast(this@MainActivity)
             }
         }
         setContent {

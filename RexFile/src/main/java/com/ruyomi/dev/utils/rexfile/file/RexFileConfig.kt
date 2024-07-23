@@ -18,7 +18,10 @@ class RexFileConfig {
     internal lateinit var context: Context
     var fileModel = RexFileModel.FILE
 
-    fun init(context: Context, fileModel: RexFileModel? = null) {
+    fun init(
+        context: Context,
+        fileModel: RexFileModel? = null
+    ) {
         this.context = context
         fileModel?.let { this.fileModel = it }
         if (fileModel == RexFileModel.SHIZUKU) ShizukuUtil.addResultListener()
