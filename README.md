@@ -41,24 +41,23 @@ implementation("com.ruyomi.dev.utils:rex-file:1.0.2")
 
 ```html
 <uses-permission
-  android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
-  tools:ignore="ScopedStorage" />
+    android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
+    tools:ignore="ScopedStorage" />
 <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 ```
 
 若你需要用到Shizuku模式，请额外添加：
 ```html
-<application
-  ... >
-  <!-- ... -->
-  <provider
-    android:name="rikka.shizuku.ShizukuProvider"
-    android:authorities="${applicationId}.shizuku"
-    android:enabled="true"
-    android:exported="true"
-    android:multiprocess="false"
-    android:permission="android.permission.INTERACT_ACROSS_USERS_FULL" />
+<application ... >
+    <!-- ... -->
+    <provider
+        android:name="rikka.shizuku.ShizukuProvider"
+        android:authorities="${applicationId}.shizuku"
+        android:enabled="true"
+        android:exported="true"
+        android:multiprocess="false"
+        android:permission="android.permission.INTERACT_ACROSS_USERS_FULL" />
 </application>
 ```
 
@@ -68,14 +67,14 @@ implementation("com.ruyomi.dev.utils:rex-file:1.0.2")
 
 ```kotlin
 class MainActivity : ComponentActivity() {
-  override fun onCreate(savedInstanceState: Bundle?) {
-    // fileModel参数可以传入RexFileModel的FILE、DOCUMENT、SHIZUKU、ROOT四种操作模式 默认是 FILE
-    RexFileConfig.instance.init(this)
-  }
-  override fun onDestroy() {
-    super.onDestroy()
-    RexFileConfig.instance.destroy()
-  }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        // fileModel参数可以传入RexFileModel的FILE、DOCUMENT、SHIZUKU、ROOT四种操作模式 默认是 FILE
+        RexFileConfig.instance.init(this)
+    }
+    override fun onDestroy() {
+        super.onDestroy()
+        RexFileConfig.instance.destroy()
+    }
 }
 ```
 
