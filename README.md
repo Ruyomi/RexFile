@@ -1,5 +1,8 @@
 # RexFile
 
+![Static Badge](https://img.shields.io/badge/RexFile-v1.0.1-74A8FF?label=RexFile)
+![Static Badge](https://img.shields.io/badge/LGPL-v2.1-green?label=LGPL-v2.1)
+
 ## 前言
 RexFile是一个十分强大的android-file库。  
 同时这也是Ruyomi团队的第一个开源作品，希望各位能够多多提Issues。
@@ -15,6 +18,8 @@ RexFile是一个十分强大的android-file库。
   时，确保使用`openInputStream()`/`openOutputStream()`/`newInputStream()`/`newOutputStream()`
   开启的流的`close()`方法仅被调用一次，否则可能会出现问题。
 - 针对于最新Android14版本的Android/data目录访问问题，你可以尝试使用`(String).useBug()`来对`path`进行处理。
+- 引用RexFile时会自动导入需要的依赖库，因此你需要注意以下事项
+  - Shizuku版本不得超过`13.1.0`
    
 ## 引用
 
@@ -31,33 +36,6 @@ Kotlin：
 ```kotlin
 implementation("com.ruyomi.dev.utils:rex-file:1.0.1")
 ```
-### 依赖库（必须）
-**DocumentFile 需要 `1.0.0` 以上**
-
-Gradle：
-
-```groovy
-implementation 'androidx.documentfile:documentfile:1.0.1'
-```
-or
-Kotlin：
-
-```kotlin
-implementation("androidx.documentfile:documentfile:1.0.1")
-```
-
-**Shizuku版本不得超过`13.1.0`**
-
-```Gradle
-implementation 'dev.rikka.shizuku:api:13.1.0'
-implementation 'dev.rikka.shizuku:provider:13.1.0'
-```
-or
-Kotlin：
-```Kotlin
-implementation("dev.rikka.shizuku:api:13.1.0")
-implementation("dev.rikka.shizuku:provider:13.1.0")
-```
 
 ### AndroidManifest.xml声明
 
@@ -67,6 +45,21 @@ implementation("dev.rikka.shizuku:provider:13.1.0")
   tools:ignore="ScopedStorage" />
 <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+```
+
+若你需要用到Shizuku模式，请额外添加：
+```html
+<application
+  ... >
+  <!-- ... -->
+  <provider
+    android:name="rikka.shizuku.ShizukuProvider"
+    android:authorities="${applicationId}.shizuku"
+    android:enabled="true"
+    android:exported="true"
+    android:multiprocess="false"
+    android:permission="android.permission.INTERACT_ACROSS_USERS_FULL" />
+</application>
 ```
 
 ## 使用方式
@@ -130,7 +123,7 @@ hasRootPermission() // 判断Root权限
 ```Kotlin
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-        file(path) // 使用方式于java.io.File差不多，但是封装了一些比较方便好用的方法
+        file(path) // 使用方式与java.io.File差不多，但是封装了一些比较方便好用的方法
     }
 }
 ```
