@@ -9,7 +9,7 @@ RexFile是一个十分强大的android-file库。
 
 ### 特点
  - 强大的功能（支持File、DocumentFile、Shizuku、Root）
- - 极高的效率（DocumentFile处理Android/data目录下的资源十分快，实测创建700个文件耗时大约30-40ms）
+ - 极高的效率
  - 十分便捷的使用方式
 
 ### 注意事项
