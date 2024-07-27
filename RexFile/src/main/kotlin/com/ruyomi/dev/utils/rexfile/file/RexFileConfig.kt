@@ -24,10 +24,19 @@ class RexFileConfig {
     ) {
         this.context = context
         fileModel?.let { this.fileModel = it }
-        if (fileModel == RexFileModel.SHIZUKU) ShizukuUtil.addResultListener()
+        if (fileModel == RexFileModel.SHIZUKU) {
+            if (!ShizukuUtil.peekService() && ShizukuUtil.hasPermission()) {
+                ShizukuUtil.bindService()
+            }
+        }
     }
 
     fun destroy() {
-        if (fileModel == RexFileModel.SHIZUKU) ShizukuUtil.removeResultListener()
+        if (fileModel == RexFileModel.SHIZUKU) {
+            if (ShizukuUtil.peekService() && ShizukuUtil.hasPermission()) {
+                ShizukuUtil.unbindService()
+            }
+            ShizukuUtil.removeRequestPermissionResultListener()
+        }
     }
 }

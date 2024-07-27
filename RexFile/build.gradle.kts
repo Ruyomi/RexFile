@@ -26,6 +26,10 @@ android {
             )
         }
     }
+    buildFeatures {
+        buildConfig = true    // 开启BuildConfig类的生成
+        aidl = true           // 启用aidl
+    }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
@@ -33,6 +37,9 @@ android {
     kotlinOptions {
         jvmTarget = "17"
     }
+
+    sourceSets["main"].java.srcDir("src/main/java")
+    sourceSets["main"].kotlin.srcDir("src/main/kotlin")
 }
 
 dependencies {
@@ -83,8 +90,8 @@ mavenPublishing {
 
         licenses {
             license {
-                name.set("GNU LESSER GENERAL PUBLIC LICENSE, Version 2.1")
-                url.set("https://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt")
+                name.set("GNU LESSER GENERAL PUBLIC LICENSE, Version 3.0")
+                url.set("https://www.gnu.org/licenses/lgpl-3.0.txt")
             }
         }
 

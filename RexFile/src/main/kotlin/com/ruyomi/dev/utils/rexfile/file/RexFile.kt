@@ -8,6 +8,7 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Environment
+import android.os.ParcelFileDescriptor
 import android.provider.Settings
 import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResultLauncher
@@ -67,33 +68,55 @@ fun RexFile.write(bytes: ByteArray): Boolean = try {
 fun RexFile.copy(target: String, cover: Boolean = false): Boolean = copy(file(target), cover)
 fun RexFile.copy(target: RexFile, cover: Boolean = false): Boolean {
     return try {
-        if (!exists()) return false
-        if (!target.exists()) if (isDirectory()) target.mkdirs() else target.createNewFile()
-        if (isDirectory()) {
-            if (target.exists() && (!cover || !target.isDirectory())) return false
-            listFiles().forEach { it.copy(file(target, file.name), cover) }
+        // 判断原文件是否存在
+        if (!exists()) {
+            return false
         }
-        if (isFile()) {
-            if (target.exists() && (!cover || !target.isFile())) return false
-
-            val inStream = openInputStream()
-            val inputStream = BufferedInputStream(inStream)
-            val outStream = target.openOutputStream()
-            val outputStream = BufferedOutputStream(outStream)
-
-            val bytes = ByteArray(8192)
-            var length: Int
-            while (inputStream.read(bytes).apply { length = this } > 0) {
-                outputStream.write(bytes, 0, length)
+        // 分类处理
+        if (isDirectory()) {
+            // 判断对象目录是否存在 以及 是否覆盖（cover） 或 对象是文件夹
+            if (target.exists() && (!cover || !target.isDirectory())) {
+                return false
             }
-            outputStream.apply {
-                flush()
-                close()
+            // 对象目录如果不存在就 新建一个文件夹
+            if (!target.exists()) {
+                target.mkdirs()
             }
-            inputStream.close()
+            // 遍历原目录下的文件 并 复制到对象目录下
+            listFiles().forEach {
+                it.copy(file(target, it.name), cover)
+            }
+        } else if (isFile()) {
+            // 判断对象文件是否存在 以及 是否覆盖（cover） 或 对象是文件
+            if (target.exists() && (!cover || !target.isFile())) {
+                return false
+            }
+            // 对象文件如果不存在就 新建一个文件
+            if (!target.exists()) {
+                target.createNewFile()
+            }
+            // 若原文件长度不为0 也就是不为空时
+            if (length() != 0L) {
+                // 开始IO流处理
+                val inStream = openInputStream()
+                val inputStream = BufferedInputStream(inStream)
+                val outStream = target.openOutputStream()
+                val outputStream = BufferedOutputStream(outStream)
+
+                val bytes = ByteArray(8192)
+                var length: Int
+                while (inputStream.read(bytes).apply { length = this } > 0) {
+                    outputStream.write(bytes, 0, length)
+                }
+                outputStream.apply {
+                    flush()
+                    close()
+                }
+                inputStream.close()
+            }
         }
         true
-    } catch (_: Exception) {
+    } catch (e: Exception) {
         false
     }
 }
@@ -321,7 +344,11 @@ fun RexFile.openInputStream() = when (this) {
         docFile?.uri ?: path.documentPathToUri()
     )
 
-    is ShizukuFile -> newInputStream()
+    is ShizukuFile -> FileInputStream(
+        ParcelFileDescriptor.AutoCloseInputStream(
+            ShizukuUtil.getShizukuFileService().getParcelFileDescriptor(path)
+        ).fd
+    )
     is RootFile -> newInputStream()
     else -> null
 }
@@ -336,77 +363,13 @@ fun RexFile.openOutputStream() = when (this) {
         }, "rwt"
     )
 
-    is ShizukuFile -> newOutputStream()
+    is ShizukuFile -> FileOutputStream(
+        ParcelFileDescriptor.AutoCloseOutputStream(
+            ShizukuUtil.getShizukuFileService().getParcelFileDescriptor(path)
+        ).fd
+    )
     is RootFile -> newOutputStream()
     else -> null
-}
-
-private fun ShizukuFile.newInputStream(): InputStream {
-    if (!exists()) throw FileNotFoundException("No such file or directory: $path")
-    if (isDirectory()) throw FileNotFoundException("Is a directory: $path")
-    try {
-        val fifo = createTempFifo()
-        if (ShizukuUtil.executeCommand("cp -f $path ${fifo.path}").first != 0) throw FileNotFoundException(
-            "cp failed: $path"
-        )
-        val inputStream = FileInputStream(fifo)
-        return object : InputStream() {
-            override fun read(): Int = inputStream.read()
-            override fun read(b: ByteArray?): Int = inputStream.read(b)
-            override fun read(b: ByteArray?, off: Int, len: Int): Int =
-                inputStream.read(b, off, len)
-
-            override fun available(): Int = inputStream.available()
-            override fun close() {
-                inputStream.close()
-                fifo.delete()
-            }
-        }
-    } catch (e: Exception) {
-        if (e is FileNotFoundException) throw e
-        val cause = e.cause
-        if (cause is FileNotFoundException) throw cause
-        val err = FileNotFoundException("Failed to open fifo").initCause(e)
-        throw (err as FileNotFoundException)
-    }
-}
-
-private fun ShizukuFile.newOutputStream(): OutputStream {
-    if (isDirectory()) throw FileNotFoundException("Is a directory: $path")
-    if (!exists() && !createNewFileAnd()) {
-        throw FileNotFoundException("No such file or directory: $path")
-    } else if (!clear()) {
-        throw FileNotFoundException("Failed to clear file: $path")
-    }
-    try {
-        val fifo = createTempFifo()
-        if (ShizukuUtil.executeCommand("cp -f ${fifo.path} $path").first != 0) throw FileNotFoundException(
-            "cp failed: $path"
-        )
-        val outputStream = FileOutputStream(fifo)
-        return object : OutputStream() {
-            override fun write(b: Int) = outputStream.write(b)
-            override fun write(b: ByteArray) = outputStream.write(b)
-            override fun write(b: ByteArray, off: Int, len: Int) = outputStream.write(b, off, len)
-            override fun flush() = outputStream.flush()
-            override fun close() {
-                if (!fifo.exists()) throw FileNotFoundException("No such file or directory: ${fifo.path}")
-                try {
-                    outputStream.close()
-                } finally {
-                    if (ShizukuUtil.executeCommand("mv -f \"${fifo.path}\" \"${path}\"").first != 0) throw FileNotFoundException(
-                        "cp failed: $path"
-                    )
-                }
-            }
-        }
-    } catch (e: Exception) {
-        if (e is FileNotFoundException) throw e
-        val cause = e.cause
-        if (cause is FileNotFoundException) throw cause
-        val err = FileNotFoundException("Failed to open fifo").initCause(e)
-        throw (err as FileNotFoundException)
-    }
 }
 
 private fun RootFile.newInputStream(): InputStream {
@@ -487,7 +450,9 @@ fun createTempFifo(): File {
 }
 
 //------ FILE ------//
-fun isBug() = File("${documentRootPath}Android\u200b/").list()?.contentEquals(File("${documentRootPath}Android/").list()) ?: false
+fun isBug() =
+    File("${documentRootPath}Android\u200b/").list()
+        ?.contentEquals(File("${documentRootPath}Android/").list()) ?: false
 
 fun String.useBug() =
     if (isBug() && !contains("\u200b")) {
@@ -633,10 +598,16 @@ fun ActivityResultLauncher<Intent>.requestDocPermission(path: String, sub: Boole
             RexFileConfig.instance.context, "".documentPathToUri(
                 if (sub) {
                     StringBuilder().apply {
-                        path.documentPathToPath().split("/").apply {
-                            for (i in 0 until if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) 3 else 2) append(
-                                "${this[i]}/"
-                            )
+                        if (path.contains("Android/data")) {
+                            path.documentPathToPath().split("/").apply {
+                                for (i in 0 until if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) 3 else 2) append(
+                                    append("${this[i]}/")
+                                )
+                            }
+                        } else {
+                            path.documentPathToPath().split("/").onEach { str ->
+                                append("$str/")
+                            }
                         }
                     }.toString()
                 } else path
@@ -649,7 +620,22 @@ fun ActivityResultLauncher<Intent>.requestDocPermission(path: String, sub: Boole
 //------ SHIZUKU ------//
 fun hasShizukuPermission() = ShizukuUtil.hasPermission()
 
+fun registerShizukuPermission(
+    granted: (() -> Unit)? = {}, denied: (() -> Unit)? = {}
+) = ShizukuUtil.addRequestPermissionResultListener { _, grantResult ->
+    if (grantResult == PackageManager.PERMISSION_GRANTED) {
+        if (!ShizukuUtil.peekService() && ShizukuUtil.hasPermission()) {
+            ShizukuUtil.bindService()
+        }
+        granted?.let { it() }
+    } else {
+        denied?.let { it() }
+    }
+}
+
 fun requestShizukuPermission(requestCode: Int) = ShizukuUtil.requestPermission(requestCode)
+
+fun peekShizukuService() = ShizukuUtil.peekService()
 //------ SHIZUKU ------//
 
 //------ ROOT ------//
@@ -702,4 +688,5 @@ abstract class RexFile : Comparator<RexFile> {
     abstract fun listFiles(filter: (RexFile) -> Boolean): Array<RexFile>
     abstract fun mkdirs(): Boolean
     abstract fun renameTo(dest: String): Boolean
+
 }

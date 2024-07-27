@@ -3,7 +3,7 @@ package com.ruyomi.dev.utils.rexfile.shell
 import java.io.DataOutputStream
 import java.io.InputStreamReader
 
-object RootUtil {
+internal object RootUtil {
 
     fun hasPermission(): Boolean {
         return try {
