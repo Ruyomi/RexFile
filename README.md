@@ -1,6 +1,6 @@
 # RexFile
 
-![Static Badge](https://img.shields.io/badge/RexFile-v1.0.1-74A8FF?label=RexFile)
+![Static Badge](https://img.shields.io/badge/RexFile-v1.0.2-74A8FF?label=RexFile)
 ![Static Badge](https://img.shields.io/badge/LGPL-v2.1-green?label=LGPL-v2.1)
 
 ## 前言
@@ -9,7 +9,7 @@ RexFile是一个十分强大的android-file库。
 
 ### 特点
  - 强大的功能（支持File、DocumentFile、Shizuku、Root）
- - 极高的效率（DocumentFile处理Android/data目录下的资源十分快，实测创建700个文件耗时大约30-40ms）
+ - 极高的效率
  - 十分便捷的使用方式
 
 ### 注意事项
@@ -28,37 +28,36 @@ RexFile是一个十分强大的android-file库。
 Gradle：
 
 ```groovy
-implementation 'com.ruyomi.dev.utils:rex-file:1.0.1'
+implementation 'com.ruyomi.dev.utils:rex-file:1.0.2'
 ```
 or
 Kotlin：
 
 ```kotlin
-implementation("com.ruyomi.dev.utils:rex-file:1.0.1")
+implementation("com.ruyomi.dev.utils:rex-file:1.0.2")
 ```
 
 ### AndroidManifest.xml声明
 
 ```html
 <uses-permission
-  android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
-  tools:ignore="ScopedStorage" />
+    android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
+    tools:ignore="ScopedStorage" />
 <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 ```
 
 若你需要用到Shizuku模式，请额外添加：
 ```html
-<application
-  ... >
-  <!-- ... -->
-  <provider
-    android:name="rikka.shizuku.ShizukuProvider"
-    android:authorities="${applicationId}.shizuku"
-    android:enabled="true"
-    android:exported="true"
-    android:multiprocess="false"
-    android:permission="android.permission.INTERACT_ACROSS_USERS_FULL" />
+<application ... >
+    <!-- ... -->
+    <provider
+        android:name="rikka.shizuku.ShizukuProvider"
+        android:authorities="${applicationId}.shizuku"
+        android:enabled="true"
+        android:exported="true"
+        android:multiprocess="false"
+        android:permission="android.permission.INTERACT_ACROSS_USERS_FULL" />
 </application>
 ```
 
@@ -68,14 +67,14 @@ implementation("com.ruyomi.dev.utils:rex-file:1.0.1")
 
 ```kotlin
 class MainActivity : ComponentActivity() {
-  override fun onCreate(savedInstanceState: Bundle?) {
-    // fileModel参数可以传入RexFileModel的FILE、DOCUMENT、SHIZUKU、ROOT四种操作模式 默认是 FILE
-    RexFileConfig.instance.init(this)
-  }
-  override fun onDestroy() {
-    super.onDestroy()
-    RexFileConfig.instance.destroy()
-  }
+    override fun onCreate(savedInstanceState: Bundle?) {
+        // fileModel参数可以传入RexFileModel的FILE、DOCUMENT、SHIZUKU、ROOT四种操作模式 默认是 FILE
+        RexFileConfig.instance.init(this)
+    }
+    override fun onDestroy() {
+        super.onDestroy()
+        RexFileConfig.instance.destroy()
+    }
 }
 ```
 
