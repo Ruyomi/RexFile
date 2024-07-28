@@ -1,7 +1,7 @@
 # RexFile
 
-![Static Badge](https://img.shields.io/badge/RexFile-v1.0.2-74A8FF?label=RexFile)
-![Static Badge](https://img.shields.io/badge/LGPL-v2.1-green?label=LGPL-v2.1)
+![Static Badge](https://img.shields.io/badge/RexFile-v1.0.3-74A8FF?label=RexFile)
+![Static Badge](https://img.shields.io/badge/LGPL-v3.0-green?label=LGPL-v3.0)
 
 ## 前言
 RexFile是一个十分强大的android-file库。  
@@ -18,8 +18,6 @@ RexFile是一个十分强大的android-file库。
   时，确保使用`openInputStream()`/`openOutputStream()`/`newInputStream()`/`newOutputStream()`
   开启的流的`close()`方法仅被调用一次，否则可能会出现问题。
 - 针对于最新Android14版本的Android/data目录访问问题，你可以尝试使用`(String).useBug()`来对`path`进行处理。
-- 引用RexFile时会自动导入需要的依赖库，因此你需要注意以下事项
-  - Shizuku版本不得超过`13.1.0`
    
 ## 引用
 
@@ -28,13 +26,13 @@ RexFile是一个十分强大的android-file库。
 Gradle：
 
 ```groovy
-implementation 'com.ruyomi.dev.utils:rex-file:1.0.2'
+implementation 'com.ruyomi.dev.utils:rex-file:1.0.3'
 ```
 or
 Kotlin：
 
 ```kotlin
-implementation("com.ruyomi.dev.utils:rex-file:1.0.2")
+implementation("com.ruyomi.dev.utils:rex-file:1.0.3")
 ```
 
 ### AndroidManifest.xml声明
@@ -95,6 +93,10 @@ class MainActivity : ComponentActivity() {
     val allFilePermission = registerAllFilePermission(...) // 注册AllFile所有文件读写权限
 
     val docPermission = registerDocPermission(...) // 注册DocumentFile访问权限
+
+  override fun onCreate(savedInstanceState: Bundle?) {
+    registerShizukuPermission(...) // 注册Shizuku权限监听
+  }
 }
 ```
 
@@ -106,6 +108,12 @@ allFilePermission.requestAllFilePermission() // 发起AllFile所有文件读写�
 docPermission.requestDocPermission() // 发起DocumentFile访问权限申请
 requestShizukuPermission(requestCode) // 发起Shizuku权限申请
 requestRootPermission() // 发起Root权限申请
+```
+
+Shizuku查看FileService服务是否正常运行：
+
+```kotlin
+peekShizukuService()
 ```
 
 判断权限：

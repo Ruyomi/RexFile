@@ -1,7 +1,7 @@
 [versions]
 agp = "8.3.0"
-devProvider = "13.1.0"
-devApi = "13.1.0"
+devProvider = "13.1.5"
+devApi = "13.1.5"
 kotlin = "1.9.0"
 coreKtx = "1.10.1"
 junit = "4.13.2"
@@ -14,7 +14,7 @@ appcompat = "1.6.1"
 material = "1.10.0"
 documentfile = "1.0.1"
 mavenPublish = "0.29.0"
-rexFile = "1.0.2"
+rexFile = "1.0.3"
 
 
 [libraries]
