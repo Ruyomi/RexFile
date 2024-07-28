@@ -4,7 +4,6 @@ import android.content.ComponentName
 import android.content.ServiceConnection
 import android.content.pm.PackageManager
 import android.os.IBinder
-import android.util.Log
 import com.ruyomi.dev.utils.rexfile.BuildConfig
 import com.ruyomi.dev.utils.rexfile.file.IShizukuFileService
 import com.ruyomi.dev.utils.rexfile.file.RexFileConfig
@@ -14,20 +13,15 @@ import rikka.shizuku.Shizuku.OnRequestPermissionResultListener
 
 internal object ShizukuUtil {
 
-    private var resultListener = OnRequestPermissionResultListener { _, _ -> hasPermission() }
-
     private lateinit var requestPermissionResultListener: OnRequestPermissionResultListener
     private lateinit var iShizukuFileService: IShizukuFileService
 
     private val serviceConnection = object : ServiceConnection {
         override fun onServiceConnected(componentName: ComponentName, iBinder: IBinder) {
-            Log.d("TAG", "服务已连接！")
             iShizukuFileService = IShizukuFileService.Stub.asInterface(iBinder)
         }
 
-        override fun onServiceDisconnected(componentName: ComponentName) {
-            Log.d("TAG", "服务连接失败！")
-        }
+        override fun onServiceDisconnected(componentName: ComponentName) {}
     }
 
     private val userServiceArgs by lazy {
@@ -99,24 +93,6 @@ internal object ShizukuUtil {
         }
     }
 
-    fun addResultListener(): Boolean {
-        return try {
-            Shizuku.addRequestPermissionResultListener(resultListener)
-            true
-        } catch (_: Exception) {
-            false
-        }
-    }
-
-    fun removeResultListener(): Boolean {
-        return try {
-            Shizuku.removeRequestPermissionResultListener(resultListener)
-            true
-        } catch (_: Exception) {
-            false
-        }
-    }
-
     fun hasPermission(): Boolean =
         try {
             if (Shizuku.isPreV11()) false else Shizuku.checkSelfPermission() == PackageManager.PERMISSION_GRANTED
@@ -136,5 +112,10 @@ internal object ShizukuUtil {
         }
     }
 
-    fun getShizukuFileService() = iShizukuFileService
+    fun getShizukuFileService(): IShizukuFileService {
+        if (!::iShizukuFileService.isInitialized || !peekService()) {
+            bindService()
+        }
+        return iShizukuFileService
+    }
 }
