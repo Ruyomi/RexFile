@@ -636,6 +636,10 @@ fun registerShizukuPermission(
 fun requestShizukuPermission(requestCode: Int) = ShizukuUtil.requestPermission(requestCode)
 
 fun peekShizukuService() = ShizukuUtil.peekService()
+
+fun bindShizukuService() = ShizukuUtil.bindService()
+
+fun unbindShizukuService() = ShizukuUtil.unbindService()
 //------ SHIZUKU ------//
 
 //------ ROOT ------//
