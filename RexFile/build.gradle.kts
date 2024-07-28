@@ -7,7 +7,7 @@ plugins {
 }
 
 android {
-    namespace = "com.ruyomi.dev.utils.rexfile"
+    namespace = "com.ruyomi.dev.utils.rex.file"
     compileSdk = 34
 
     defaultConfig {

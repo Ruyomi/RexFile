@@ -1,11 +1,11 @@
-package com.ruyomi.dev.utils.rexfile.file.impl
+package com.ruyomi.dev.utils.rex.file.impl
 
 import android.provider.DocumentsContract
 import androidx.documentfile.provider.DocumentFile
-import com.ruyomi.dev.utils.rexfile.file.RexFile
-import com.ruyomi.dev.utils.rexfile.file.RexFileConfig
-import com.ruyomi.dev.utils.rexfile.file.documentAbsolutePath
-import com.ruyomi.dev.utils.rexfile.file.documentPathToUri
+import com.ruyomi.dev.utils.rex.file.RexFile
+import com.ruyomi.dev.utils.rex.file.RexFileConfig
+import com.ruyomi.dev.utils.rex.file.documentAbsolutePath
+import com.ruyomi.dev.utils.rex.file.documentPathToUri
 import java.io.File
 
 class DocFile : RexFile {

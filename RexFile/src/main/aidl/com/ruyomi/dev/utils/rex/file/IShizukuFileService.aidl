@@ -1,5 +1,5 @@
 // IShizukuFileService.aidl
-package com.ruyomi.dev.utils.rexfile.file;
+package com.ruyomi.dev.utils.rex.file;
 
 // Declare any non-default types here with import statements
 // import com.ruyomi.dev.utils.rexfile.file.RexFile;

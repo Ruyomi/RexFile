@@ -1,13 +1,13 @@
-package com.ruyomi.dev.utils.rexfile.shell
+package com.ruyomi.dev.utils.rex.file.utils
 
 import android.content.ComponentName
 import android.content.ServiceConnection
 import android.content.pm.PackageManager
 import android.os.IBinder
-import com.ruyomi.dev.utils.rexfile.BuildConfig
-import com.ruyomi.dev.utils.rexfile.file.IShizukuFileService
-import com.ruyomi.dev.utils.rexfile.file.RexFileConfig
-import com.ruyomi.dev.utils.rexfile.file.impl.ShizukuFileService
+import com.ruyomi.dev.utils.rex.file.BuildConfig
+import com.ruyomi.dev.utils.rex.file.IShizukuFileService
+import com.ruyomi.dev.utils.rex.file.RexFileConfig
+import com.ruyomi.dev.utils.rex.file.impl.ShizukuFileService
 import rikka.shizuku.Shizuku
 import rikka.shizuku.Shizuku.OnRequestPermissionResultListener
 
@@ -113,7 +113,7 @@ internal object ShizukuUtil {
     }
 
     fun getShizukuFileService(): IShizukuFileService {
-        if (!::iShizukuFileService.isInitialized || !peekService()) {
+        if (!ShizukuUtil::iShizukuFileService.isInitialized || !peekService()) {
             bindService()
         }
         return iShizukuFileService

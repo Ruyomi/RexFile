@@ -1,6 +1,6 @@
 # RexFile
 
-![Static Badge](https://img.shields.io/badge/RexFile-v1.0.3-74A8FF?label=RexFile)
+![Static Badge](https://img.shields.io/badge/RexFile-v1.0.4-74A8FF?label=RexFile)
 ![Static Badge](https://img.shields.io/badge/LGPL-v3.0-green?label=LGPL-v3.0)
 
 ## 前言
@@ -27,13 +27,13 @@ RexFile是一个十分强大的android-file库。
 Gradle：
 
 ```groovy
-implementation 'com.ruyomi.dev.utils:rex-file:1.0.3'
+implementation 'com.ruyomi.dev.utils:rex-file:1.0.4'
 ```
 or
 Kotlin：
 
 ```kotlin
-implementation("com.ruyomi.dev.utils:rex-file:1.0.3")
+implementation("com.ruyomi.dev.utils:rex-file:1.0.4")
 ```
 
 ### AndroidManifest.xml声明

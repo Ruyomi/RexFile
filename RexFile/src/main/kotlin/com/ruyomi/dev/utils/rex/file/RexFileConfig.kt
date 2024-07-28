@@ -1,8 +1,8 @@
-package com.ruyomi.dev.utils.rexfile.file
+package com.ruyomi.dev.utils.rex.file
 
 import android.annotation.SuppressLint
 import android.content.Context
-import com.ruyomi.dev.utils.rexfile.shell.ShizukuUtil
+import com.ruyomi.dev.utils.rex.file.utils.ShizukuUtil
 
 enum class RexFileModel {
     FILE, DOCUMENT, SHIZUKU, ROOT

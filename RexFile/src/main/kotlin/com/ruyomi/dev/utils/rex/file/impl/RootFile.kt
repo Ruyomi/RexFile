@@ -1,7 +1,8 @@
-package com.ruyomi.dev.utils.rexfile.file.impl
+package com.ruyomi.dev.utils.rex.file.impl
 
-import com.ruyomi.dev.utils.rexfile.file.RexFile
-import com.ruyomi.dev.utils.rexfile.shell.RootUtil
+import com.ruyomi.dev.utils.rex.file.RexFile
+import com.ruyomi.dev.utils.rex.file.utils.RootUtil
+
 import java.io.File
 
 class RootFile : RexFile {

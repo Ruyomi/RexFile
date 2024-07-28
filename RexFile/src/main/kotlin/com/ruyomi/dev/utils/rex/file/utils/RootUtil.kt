@@ -1,4 +1,4 @@
-package com.ruyomi.dev.utils.rexfile.shell
+package com.ruyomi.dev.utils.rex.file.utils
 
 import java.io.DataOutputStream
 import java.io.InputStreamReader

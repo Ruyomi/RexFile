@@ -1,7 +1,7 @@
-package com.ruyomi.dev.utils.rexfile.file.impl
+package com.ruyomi.dev.utils.rex.file.impl
 
 import android.os.ParcelFileDescriptor
-import com.ruyomi.dev.utils.rexfile.file.IShizukuFileService
+import com.ruyomi.dev.utils.rex.file.IShizukuFileService
 
 class ShizukuFileService : IShizukuFileService.Stub() {
     override fun createNewFile(path: String?): Boolean {
