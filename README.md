@@ -140,4 +140,4 @@ class MainActivity : ComponentActivity() {
 欢迎各位给Star，感谢！
 
 ## 开源协议
-[LGPL v2.1](https://www.gnu.org/licenses/old-licenses/lgpl-2.1.txt)
+[LGPL v3.0](https://www.gnu.org/licenses/lgpl-3.0.txt)
