@@ -10,6 +10,7 @@ import android.os.Build
 import android.os.Environment
 import android.os.ParcelFileDescriptor
 import android.provider.Settings
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -60,7 +61,7 @@ fun RexFile.readBytes(): ByteArray = try {
 
 fun RexFile.write(string: String): Boolean = write(string.toByteArray())
 fun RexFile.write(bytes: ByteArray): Boolean = try {
-    openOutputStream()?.let { writeStream(it, bytes) } ?: false
+    openOutputStream()?.let { writeStream(it, bytes) } == true
 } catch (_: Exception) {
     false
 }
@@ -340,6 +341,7 @@ fun writeStream(stream: OutputStream, bytes: ByteArray, close: Boolean = true): 
 @SuppressLint("Recycle")
 fun RexFile.openInputStream() = when (this) {
     is IoFile -> FileInputStream(path)
+
     is DocFile -> RexFileConfig.instance.context.contentResolver.openInputStream(
         docFile?.uri ?: path.documentPathToUri()
     )
@@ -349,6 +351,7 @@ fun RexFile.openInputStream() = when (this) {
             ShizukuUtil.getShizukuFileService().getParcelFileDescriptor(path)
         ).fd
     )
+
     is RootFile -> newInputStream()
     else -> null
 }
@@ -356,6 +359,7 @@ fun RexFile.openInputStream() = when (this) {
 @SuppressLint("Recycle")
 fun RexFile.openOutputStream() = when (this) {
     is IoFile -> FileOutputStream(path)
+
     is DocFile -> RexFileConfig.instance.context.contentResolver.openOutputStream(
         run {
             createNewFileAnd()
@@ -368,6 +372,7 @@ fun RexFile.openOutputStream() = when (this) {
             ShizukuUtil.getShizukuFileService().getParcelFileDescriptor(path)
         ).fd
     )
+
     is RootFile -> newOutputStream()
     else -> null
 }
@@ -375,6 +380,7 @@ fun RexFile.openOutputStream() = when (this) {
 private fun RootFile.newInputStream(): InputStream {
     if (!exists()) throw FileNotFoundException("No such file or directory: $path")
     if (isDirectory()) throw FileNotFoundException("Is a directory: $path")
+    Log.d("TAG", "ok first!")
     try {
         val fifo = createTempFifo()
         if (RootUtil.executeCommand("cp -f $path ${fifo.path}").first != 0) throw FileNotFoundException(
@@ -409,6 +415,7 @@ private fun RootFile.newOutputStream(): OutputStream {
     } else if (!clear()) {
         throw FileNotFoundException("Failed to clear file: $path")
     }
+    Log.d("TAG", "ok first out!")
     try {
         val fifo = createTempFifo()
         if (RootUtil.executeCommand("cp -f ${fifo.path} $path").first != 0) throw FileNotFoundException(
@@ -432,6 +439,7 @@ private fun RootFile.newOutputStream(): OutputStream {
             }
         }
     } catch (e: Exception) {
+        Log.d("TAG newOut", e.toString())
         if (e is FileNotFoundException) throw e
         val cause = e.cause
         if (cause is FileNotFoundException) throw cause
@@ -443,7 +451,7 @@ private fun RootFile.newOutputStream(): OutputStream {
 fun createTempFifo(): File {
     val dir = File(
         Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS),
-        ".leng-file-tmp"
+        ".rex-file-tmp"
     )
     if (!dir.exists()) dir.mkdirs()
     return File(dir, "fifo-${UUID.randomUUID()}.tmp").apply { createNewFile() }
@@ -452,12 +460,14 @@ fun createTempFifo(): File {
 //------ FILE ------//
 fun isBug() =
     File("${documentRootPath}Android\u200b/").list()
-        ?.contentEquals(File("${documentRootPath}Android/").list()) ?: false
+        ?.contentEquals(File("${documentRootPath}Android/").list()) == true
 
 fun String.useBug() =
     if (isBug() && !contains("\u200b")) {
         replaceFirst("Android", "Android\u200b")
-    } else this
+    } else {
+        replace("\u200b", "")
+    }
 
 private val storagePermissions =
     arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -598,11 +608,11 @@ fun ActivityResultLauncher<Intent>.requestDocPermission(path: String, sub: Boole
             RexFileConfig.instance.context, "".documentPathToUri(
                 if (sub) {
                     StringBuilder().apply {
-                        if (path.contains("Android/data")) {
+                        if (path.replace("\u200b", "").contains("Android/data")) {
                             path.documentPathToPath().split("/").apply {
-                                for (i in 0 until if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) 3 else 2) append(
+                                for (i in 0 until if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) 3 else 2) {
                                     append("${this[i]}/")
-                                )
+                                }
                             }
                         } else {
                             path.documentPathToPath().split("/").onEach { str ->
