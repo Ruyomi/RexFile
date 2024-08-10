@@ -3,7 +3,7 @@ package com.ruyomi.dev.utils.rex.file.impl
 import android.os.ParcelFileDescriptor
 import com.ruyomi.dev.utils.rex.file.IShizukuFileService
 
-class ShizukuFileService : IShizukuFileService.Stub() {
+internal class ShizukuFileService : IShizukuFileService.Stub() {
     override fun createNewFile(path: String?): Boolean {
         return if (path != null) {
             IoFile(path).createNewFile()
